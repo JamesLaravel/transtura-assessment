@@ -23,15 +23,19 @@ app.get("/", (req, res) => {
 app.use("/api/", routes);
 
 app.use((err, req, res, next) => {
-  const status = err.status || 500;
+  const status = err.status;
 
   console.log(err);
-  res.status(status).json({
-    error: {
+
+  if (status === 500) {
+    return res.status(status).json({
       error: true,
-      statue: 0,
-      message: err.message,
-    },
+      message: "Internal Server Error",
+    });
+  }
+  return res.status(status).json({
+    error: true,
+    message: err.message,
   });
 });
 

@@ -13,6 +13,11 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'driver_id',
         onDelete: 'CASCADE'
       })
+
+
+      Buses.belongsTo(models.Trip, {
+        foreignKey: 'bus_id',
+      })
     }
   }
   Buses.init(
