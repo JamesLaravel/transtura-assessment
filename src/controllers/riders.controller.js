@@ -36,6 +36,7 @@ exports.RiderLogin = async (req, res, next) => {
       where: {
         email: req.body.email,
       },
+      attributes: ["id", "email", "name"],
     });
 
     if (!rider) {
@@ -105,7 +106,6 @@ exports.bookTrip = async (req, res, next) => {
           [Op.or]: ["pending", "active"],
         },
       },
-     
     });
 
     if (obj.number_of_trip <= 0) {
@@ -128,10 +128,10 @@ exports.bookTrip = async (req, res, next) => {
       attributes: ["id", "serial_no", "plate_no", "seats", "driver_id"],
       include: [
         {
-            model: models.Drivers,
-            attributes: ["name", "email"],
-        }
-    ]
+          model: models.Drivers,
+          attributes: ["id", "name", "email"],
+        },
+      ],
     });
 
     if (!bus) {
@@ -154,12 +154,13 @@ exports.bookTrip = async (req, res, next) => {
         message: "Not enough seat for user",
       });
     }
-    
+
     const no_seat = obj.number_of_seats;
     const book = await models.Trip.create({
       rider_id: user.id,
       bus_id: bus.id,
       number_of_seats: no_seat,
+      driver_id: bus.Driver.id,
       status: "pending",
     });
 

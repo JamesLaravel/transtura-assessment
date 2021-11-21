@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
-const Rider = require("../models").Riders;
+const Riders = require("../models").Riders;
 
-exports.riderAuth = (req, res, next) => {
+exports.Auth = (req, res, next) => {
   const { authorization } = req.headers;
   const error = new Error();
 
@@ -11,7 +11,7 @@ exports.riderAuth = (req, res, next) => {
     return next(error);
   }
 
-  const token = authorization.split("Bearer")[1];
+  const token = authorization.split("Bearer ")[1];
 
   if (!token) {
     error.status = 401;
@@ -27,6 +27,23 @@ exports.riderAuth = (req, res, next) => {
       error.message = "Token time out. Login again";
       return next(error);
     }
+
+    console.log("here", user);
+
+    Riders.findOne({
+      where: {
+        email: user.email,
+      },
+      attributes: ["email", "name"],
+    }).then((res) => {
+      console.log("rider", res);
+      if (res === null) {
+        error.status = 403;
+        error.message = "Access denied";
+        return next(error);
+      }
+    });
+
     req.user = user;
     return next();
   } catch (error) {
@@ -38,5 +55,5 @@ exports.riderAuth = (req, res, next) => {
     error.status = 401;
     return next(error);
   }
-  return next();
+  //return next();
 };

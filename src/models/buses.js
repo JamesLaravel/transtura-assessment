@@ -10,14 +10,13 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Buses.belongsTo(models.Drivers, {
-        foreignKey: 'driver_id',
-        onDelete: 'CASCADE'
-      })
-
+        foreignKey: "driver_id",
+        onDelete: "CASCADE",
+      });
 
       Buses.belongsTo(models.Trip, {
-        foreignKey: 'bus_id',
-      })
+        foreignKey: "trip_id",
+      });
     }
   }
   Buses.init(
