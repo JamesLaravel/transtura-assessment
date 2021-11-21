@@ -17,6 +17,10 @@ module.exports = (sequelize, DataTypes) => {
       Trip.belongsTo(models.Riders, {
         foreignKey: "rider_id",
       });
+
+      Trip.belongsTo(models.Drivers, {
+        foreignKey: "driver_id",
+      });
     }
   }
   Trip.init(

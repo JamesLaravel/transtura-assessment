@@ -117,11 +117,21 @@ exports.HandleRequest = async (req, res, next) => {
       include: [
         {
           model: models.Buses,
-          attributes: ["id", "seats"],
+          attributes: ["id", "seats", "serial_no", "plate_no"],
+        },
+        {
+          model: models.Drivers,
+          attributes: ["name", "email"],
+        },
+        {
+          model: models.Riders,
+          attributes: ["name", "email"],
         },
       ],
       //attributes: ["id", ""]
     });
+
+    let bus = trip.Bus;
 
     if (!trip) {
       return res.status(400).json({
@@ -145,20 +155,41 @@ exports.HandleRequest = async (req, res, next) => {
         },
         {
           where: { id: trip.Bus.id },
+
+          returning: true,
+          plan: true,
         }
       );
+      bus.seats = newseatSize;
     }
 
-    await models.Trip.update(
+    const update = await models.Trip.update(
       {
         status,
       },
-      { where: { id: trip.id } }
+      { where: { id: trip.id }, returning: true, plan: true }
     );
 
     return res.status(200).json({
       error: false,
       message: `Trip ${resMsg} successfully`,
+      data: {
+        tripId: update.id,
+        number_of_seats: update.number_of_seats,
+        bus: {
+          serial_no: bus.serial_no,
+          plate_no: bus.plate_no,
+          seats: bus.seats,
+        },
+        driver: {
+          name: trip.Driver.name,
+          email: trip.Driver.email,
+        },
+        rider: {
+          name: trip.Rider.name,
+          email: trip.Rider.email,
+        },
+      },
     });
   } catch (error) {
     error.status = 500;

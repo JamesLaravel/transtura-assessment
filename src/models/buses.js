@@ -14,8 +14,8 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: "CASCADE",
       });
 
-      Buses.belongsTo(models.Trip, {
-        foreignKey: "trip_id",
+      Buses.hasOne(models.Trip, {
+        foreignKey: "bus_id",
       });
     }
   }

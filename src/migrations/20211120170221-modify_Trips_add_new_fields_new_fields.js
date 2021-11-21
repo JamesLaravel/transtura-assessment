@@ -10,6 +10,11 @@ module.exports = {
      */
     return queryInterface.addColumn('Trips', 'driver_id', {
       type: Sequelize.INTEGER,
+      references: {
+        model: "Drivers",
+        key: "id",
+        as: "driver_id",
+      },
     })
   },
 
