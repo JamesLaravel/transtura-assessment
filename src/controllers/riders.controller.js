@@ -76,6 +76,7 @@ exports.getAvailableBuses = async (req, res, next) => {
           [Op.gt]: 0,
         },
       },
+      attributes: ["serial_no", "seats", "driver_id", "plate_no"],
     });
     return res.status(200).json({
       error: false,
