@@ -101,6 +101,8 @@ exports.HandleRequest = async (req, res, next) => {
       resMsg = "started";
     } else if (status === "completed") {
       resMsg = "completed";
+    } else if (status === "reject") {
+      resMsg = "rejected";
     } else {
       return res.status(400).json({
         message: "Pass a valid handler",
@@ -112,6 +114,7 @@ exports.HandleRequest = async (req, res, next) => {
         id: tripId,
         driver_id: user.id,
       },
+      //attributes: ["id", ""]
     });
 
     if (!trip) {
@@ -128,6 +131,7 @@ exports.HandleRequest = async (req, res, next) => {
       });
     }
 
+   
     await models.Trip.update(
       {
         status,
@@ -176,3 +180,65 @@ exports.tripStatus = async (req, res, next) => {
     next(error);
   }
 };
+
+// const AcceptOrRejectTrip = async (trip, request) => {
+//   const bus = await models.Buses.findOne({
+//     where: { id: trip.bus_id },
+//     attributes: ["id", "serial_no", "seats"],
+//   });
+
+//   console.log("bus", bus);
+//   console.log("req", request);
+//   console.log("trip", trip);
+//   let res;
+//   // all possible cases
+//   if (request === "accept" && trip.status === "pending") {
+//     // is handles the use case where the trip is accepted
+
+//     const newseatsize = bus.seats - trip.number_of_seats;
+
+//     await models.Buses.update({ id: bus.id }, { seats: newseatsize });
+
+//     await models.Trip.update({ id: trip.id }, { status: "accept" });
+//     res.status = true;
+//     res.msg = "Trip accepted successfully";
+//   }
+
+//   if (request === "reject" && trip.status === "pending") {
+//     await models.Trip.update({ id: trip.id }, { status: "reject" });
+//     res.status = true;
+//     res.msg = "Trip Rejected successfully";
+//   }
+
+//   if (request === "completed" && trip.status === "pending") {
+//     res.status = true;
+//     res.msg = "Trip still pending";
+//   }
+
+//   if (request === "complete" && trip.status === "accept") {
+//     // is handles the use case where the trip is completed
+
+//     const newseatsize = bus.seats + trip.number_of_seats;
+
+//     await models.Buses.update({ id: bus.id }, { seats: newseatsize });
+
+//     await models.Trip.update({ id: trip.id }, { status: "completed" });
+//     res.status = true;
+//     res.msg = "Trip completed successfully";
+//   }
+
+//   if (request === "reject" && trip.status === "accept") {
+//     const newseatsize = bus.seats + trip.number_of_seats;
+
+//     await models.Buses.update({ id: bus.id }, { seats: newseatsize });
+
+//     await models.Trip.update({ id: trip.id }, { status: "reject" });
+
+//     res.status = true;
+//     res.msg = "Trip Rejected successfully";
+//   }
+
+//   if(request === "reject" && trip.status === " ")
+//   console.log(res);
+//   return res;
+// };

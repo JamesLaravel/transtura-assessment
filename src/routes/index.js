@@ -91,9 +91,9 @@ router.post(
     body("status")
       .notEmpty()
       .withMessage("status, status is required")
-      .isIn(["accept", "active", "completed"])
+      .isIn(["accept", "active", "completed", "reject"])
       .withMessage(
-        "status, status expect to be either accept, active, completed"
+        "status, status expect to be either accept, active, completed, reject"
       ),
   ],
   DriverAuth,
