@@ -4,7 +4,9 @@ const { validateInputData, getSignedToken } = require("../helper");
 
 exports.getAllRiders = async (req, res, next) => {
   try {
-    const riders = await models.Riders.findAll();
+    const riders = await models.Riders.findAll({
+      attributes: ["name", "email", "createdAt", "updatedAt"],
+    });
     return res.status(200).json({
       error: false,
       message: "riders retrieved",
